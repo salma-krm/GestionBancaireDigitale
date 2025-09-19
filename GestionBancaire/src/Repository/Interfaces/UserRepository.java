@@ -1,8 +1,6 @@
-
 package Repository.Interfaces;
 
 import Module.User;
-
 import java.util.UUID;
 
 public interface UserRepository {
@@ -11,4 +9,3 @@ public interface UserRepository {
     void update(User user);
     User findById(UUID id);
 }
-

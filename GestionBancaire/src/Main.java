@@ -73,9 +73,11 @@ public class Main {
         do {
             System.out.println("\n--- Menu Utilisateur ---");
             System.out.println("1. Créer un compte");
+
             System.out.println("2. Voir les transactions ");
-            System.out.println("3. edit profil");
+            System.out.println("3. Modifier le profil");
             System.out.println("4. Déconnexion");
+            System.out.println("5. deposer");
             System.out.print("Votre choix : ");
             choix = scanner.nextInt();
             scanner.nextLine();
@@ -83,22 +85,67 @@ public class Main {
             switch (choix) {
                 case 1 -> createAccount();
                 case 2 -> System.out.println("Fonction non encore implémentée.");
-                case 3 -> {
-
-                }
-                case 4-> {
+                case 3 -> updateAccount();
+                case 4 -> {
                     System.out.println("Déconnexion...");
                     currentUser = null;
                 }
                 default -> System.out.println("Choix invalide.");
             }
-        } while (choix != 3);
+        } while (choix != 4);
     }
 
     private static void createAccount() {
         Account account = new Account(currentUser);
         accountService.create(account);
         System.out.println("Compte créé avec succès !");
-        System.out.println("ID du compte : " + account.getAccountId());
+        System.out.println("ID du compte : " + account.getAccountId() +"\n user : "+account.getUser().getEmail());
+
     }
+
+    private static void updateAccount() {
+        System.out.print("Nouveau prénom : ");
+        String firstName = scanner.nextLine();
+        System.out.print("Nouveau nom : ");
+        String lastName = scanner.nextLine();
+        System.out.print("Nouvel email : ");
+        String email = scanner.nextLine();
+        System.out.print("Nouveau mot de passe : ");
+        String password = scanner.nextLine();
+
+        User updatedUser = new User(firstName, lastName, email, password);
+        updatedUser.setId(currentUser.getId());
+        User result = authService.update(updatedUser);
+
+        if (result != null) {
+            currentUser = result;
+            System.out.println("Mise à jour réussie !");
+        } else {
+            System.out.println("Échec de la mise à jour.");
+        }
+    }
+    private static void deposer() {
+        System.out.print("Entrez le montant : ");
+        double balance = scanner.nextDouble();
+
+        if (currentUser == null) {
+            System.out.println("Non connecté.");
+            return;
+        }
+
+        User getIdUser = authService.findById(currentUser.getId());
+        if (getIdUser == null) {
+            System.out.println("Utilisateur non enregistré.");
+            return;
+        }
+
+        Account result = AccountService.deposer(currentUser, balance);
+        if (result != null) {
+            System.out.println("Dépôt réussi : " + result);
+        } else {
+            System.out.println("Échec du traitement.");
+        }
+    }
+
+
 }

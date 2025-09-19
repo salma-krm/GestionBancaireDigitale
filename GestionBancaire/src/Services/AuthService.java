@@ -3,6 +3,8 @@ package Services;
 import Module.User;
 import Repository.Interfaces.UserRepository;
 
+import java.util.UUID;
+
 public class AuthService {
     private final UserRepository userRepository;
 
@@ -21,4 +23,18 @@ public class AuthService {
         }
         return null;
     }
+
+    public User update(User updateUser) {
+        User existingUser = userRepository.findById(updateUser.getId());
+        if (existingUser != null) {
+            userRepository.update(updateUser);
+            return updateUser;
+        }
+        return null;
+    }
+    public User findById(UUID id){
+        return userRepository.findById(id);
+
+    }
+
 }
