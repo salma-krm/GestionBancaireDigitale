@@ -1,7 +1,7 @@
 package Module;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class User {
@@ -10,7 +10,7 @@ public class User {
     private String lastName;
     private String email;
     private String password;
-    private AbstractList<Account> account = new ArrayList<>();
+    private List<Account> accounts = new ArrayList<>();
 
     public User() {}
 
@@ -21,13 +21,8 @@ public class User {
         this.password = password;
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
 
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
@@ -39,7 +34,8 @@ public class User {
     public void setEmail(String email) { this.email = email; }
 
     public String getPassword() { return password; }
-    public AbstractList<Account> getAccount() { return account; }
-
     public void setPassword(String password) { this.password = password; }
+
+    public List<Account> getAccounts() { return accounts; }
+    public void addAccount(Account account) { this.accounts.add(account); }
 }

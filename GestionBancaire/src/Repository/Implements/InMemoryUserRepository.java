@@ -10,22 +10,20 @@ import java.util.UUID;
 public class InMemoryUserRepository implements UserRepository {
     private final List<User> users = new ArrayList<>();
 
-    @Override
-    public void save(User user) {
-        users.add(user);
-    }
+    public void save(User user) { users.add(user); }
 
-    @Override
     public User findByEmail(String email) {
-        for (User user : users) {
-            if (user.getEmail().equalsIgnoreCase(email)) {
-                return user;
-            }
-        }
-        return null;
+        return users.stream()
+                .filter(u -> u.getEmail().equalsIgnoreCase(email))
+                .findFirst().orElse(null);
     }
 
-    @Override
+    public User findById(UUID id) {
+        return users.stream()
+                .filter(u -> u.getId().equals(id))
+                .findFirst().orElse(null);
+    }
+
     public void update(User user) {
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i).getId().equals(user.getId())) {
@@ -33,15 +31,5 @@ public class InMemoryUserRepository implements UserRepository {
                 return;
             }
         }
-    }
-
-    @Override
-    public User findById(UUID id) {
-        for (User user : users) {
-            if (user.getId().equals(id)) {
-                return user;
-            }
-        }
-        return null;
     }
 }

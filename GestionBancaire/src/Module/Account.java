@@ -2,63 +2,45 @@ package Module;
 
 import java.time.LocalDateTime;
 import java.util.Random;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class Account {
     private UUID id = UUID.randomUUID();
     private String accountId;
     private User user;
-    private Double balance;
+    private double balance;
     private boolean active;
     private LocalDateTime createdAt;
     private AccountType type;
 
-
-public Account(double balance){
-    this.balance = balance;
-
-}
-    public Account(User user) {
+    public Account(User user, AccountType type) {
         this.user = user;
-        this.balance = 0.00;
+        this.balance = 0.0;
         this.accountId = generateAccountId();
         this.active = true;
         this.createdAt = LocalDateTime.now();
-        this.type = AccountType.SALAIRE;
-    }
-    public UUID getId() {
-        return id;
+        this.type = type;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-    public Double getBalance() { return balance; }
+    public UUID getId() { return id; }
     public String getAccountId() { return accountId; }
-    public boolean getisActive() { return active; }
+    public User getUser() { return user; }
+    public double getBalance() { return balance; }
+    public void setBalance(double balance) { this.balance = balance; }
+    public boolean isActive() { return active; }
     public LocalDateTime getCreatedAt() { return createdAt; }
-    public static User getUser() { return user; }
     public AccountType getType() { return type; }
-    public void setBalance(Double balance) { this.balance = balance; }
-    public void setActive(boolean active) { this.active = active; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    private String generateAccountId() {
+        int random1 = (int)(Math.random() * 10000);
+        int random2 = (int)(Math.random() * 10000);
+        String uuidPart = UUID.randomUUID().toString().substring(0, 4);
+        return "BK-" + random1 + "-" + random2 + "-" + uuidPart;
+    }
 
     public enum AccountType {
         COURANT,
         EPARGNE,
         SALAIRE
-    }
-
-    private String generateAccountId() {
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        StringBuilder id = new StringBuilder();
-        Random rand = new Random();
-        for (int i = 0; i < 14; i++) {
-            int index = rand.nextInt(chars.length());
-            id.append(chars.charAt(index));
-        }
-        return id.toString();
     }
 }

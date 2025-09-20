@@ -25,16 +25,15 @@ public class AuthService {
     }
 
     public User update(User updateUser) {
-        User existingUser = userRepository.findById(updateUser.getId());
-        if (existingUser != null) {
+        User existing = userRepository.findById(updateUser.getId());
+        if (existing != null) {
             userRepository.update(updateUser);
             return updateUser;
         }
         return null;
     }
-    public User findById(UUID id){
+
+    public User findById(UUID id) {
         return userRepository.findById(id);
-
     }
-
 }

@@ -1,30 +1,48 @@
 package Services;
 
 import Module.Account;
-import Module.User ;
+import Module.Transaction;
+import Module.User;
 import Repository.Interfaces.AccountRepository;
-
-import java.util.AbstractList;
+import Repository.Interfaces.TransactionRepository;
 
 public class AccountService {
-    private static final AccountRepository accountRepository =  null ;
+    private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
 
-    public AccountService(AccountRepository accountRepository) {
+    public AccountService(AccountRepository accountRepository, TransactionRepository transactionRepository) {
         this.accountRepository = accountRepository;
+        this.transactionRepository = transactionRepository;
     }
-
-    public static Account deposer(User user, double balance) {
-        AbstractList<Account> accounts = user.getAccount();
-        if (accounts != null && !accounts.isEmpty()) {
-            Account updatedAccount = accountRepository.update(user, balance);
-            return updatedAccount;
-        }
-        return null;
-    }
-
 
     public void create(Account account) {
+        account.getUser().addAccount(account);
         accountRepository.save(account);
     }
 
+    public Account deposer(User user, double amount) {
+        if (user.getAccounts().isEmpty()) return null;
+
+        Account account = user.getAccounts().get(0);
+        Account updated = accountRepository.update(user, amount);
+
+        if (updated != null) {
+            transactionRepository.save(new Transaction(account, amount, Transaction.TransactionType.DEPOSIT));
+        }
+
+        return updated;
+    }
+
+    public Account retrait(User user, double amount) {
+        if (user.getAccounts().isEmpty()) return null;
+
+        Account account = user.getAccounts().get(0);
+        Account result = accountRepository.retrait(account, amount);
+
+        if (result != null) {
+            transactionRepository.save(new Transaction(account, amount, Transaction.TransactionType.WITHDRAWAL));
+        }
+
+        return result;
+    }
 }
